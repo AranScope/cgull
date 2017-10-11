@@ -1,0 +1,6 @@
+#ifndef SERVER_CONSTANTS_H
+#define SERVER_CONSTANTS_H
+
+#define MAX_BUFFER_SIZE 4096
+
+#endif
