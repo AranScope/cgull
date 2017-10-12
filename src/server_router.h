@@ -1,6 +1,8 @@
 
 #include "server_defines.h"
 
+void serve(char *dir);
+
 void route(enum method m, char *path, struct response *resp);
 
 struct response *json(char *data);

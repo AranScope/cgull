@@ -1,7 +1,18 @@
 #include "server_router.h"
 #include "server_handlers.h"
+#include "server_constants.h"
+#include "server_logger.h"
+
+#include <unistd.h>
 #include <stdlib.h>
 
+void serve(char *dir) {
+    int result = chdir(dir);
+
+    if(result != 0) {
+        info("Could not set custom web root, defaulting to .");
+    }
+}
 
 void route(enum method method, char *path, struct response *response) {
     struct request *request;
@@ -35,8 +46,4 @@ struct response *text(char *data) {
 struct response *html(char *data) {
     enum response_type type = TEXTHTML;
     return make_response(TEXTHTML, data);
-}
-
-void serve(char *path) {
-
 }

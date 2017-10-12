@@ -1,1 +1,0 @@
-gcc server_main.c server_base.c server_sockets.c server_router.c server_handlers.c server_logger.c -o build/server

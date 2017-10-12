@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "server_defines.h"
+#include "server_logger.h"
 
 // returns a response type, path given a request
 // 
@@ -12,25 +13,39 @@ struct request *parse(char *http_header) {
 
     char *line_ptr;
     char *token_ptr;
+    char *ext_ptr;
 
     char *first_line = strtok_r(http_header, "\n", &line_ptr);
 
     char *http_verb = strtok_r(first_line, " ", &token_ptr);
 
-    printf("Parsing, found http verb %s\n", http_verb);
+    debug("Parsing, found http verb %s", http_verb);
 
     if(strncmp(http_verb, GET_STR, sizeof(http_verb)) == 0) {
-        printf("Assigned get method to request\n");
-        printf("Http verb value %d\n", GET);
+        debug("Assigned get method to request");
+        debug("Http verb value %d", GET);
         request->method = GET;
     }
     else if(strncmp(http_verb, HEAD_STR, sizeof(http_verb)) == 0) {
-        printf("Assigned head method to request\n");
+        debug("Assigned head method to request");
         request->method = HEAD;
     }
-
+    
     char *path = strtok_r(NULL, " ", &token_ptr);
+    
     request->path = path;
+
+    debug("The path: %s was requested", request->path);
+
+    char *basename = strtok_r(strdup(path), ".", &ext_ptr);
+
+    debug("Calculated the base name");
+    char *ext = strtok_r(NULL, ".", &ext_ptr);
+
+    if(ext) request->file_request = true;
+    else request->file_request = false;
+    
+    debug("The extension is: %s", ext);
 
     return request;
 

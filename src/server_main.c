@@ -5,11 +5,15 @@
 #include "server_logger.h"
 
 int main(int argc, char *argv[]) {
-    loglevel(DEBUG);
 
+    // default serving directory is ./web
+    loglevel(DEBUG);
+    
+    serve("./web");
     route(GET, "/hello", text("Hello World!"));
     route(GET, "/world", text("World!"));
-    route(GET, "/json/hello", json("{'hello': 'world'}"));
-    
-    start(8080);
+
+    start(9001);
+
+    return 0;
 }

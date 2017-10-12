@@ -4,6 +4,8 @@
 #define GET_STR "GET"
 #define HEAD_STR "HEAD"
 
+#include <stdbool.h>
+
 enum method {
     GET,
     HEAD
@@ -30,6 +32,7 @@ struct request {
     enum method method;
     enum response_type type;
     char *path;
+    bool file_request;
 };
 
 struct handler {

@@ -1,0 +1,9 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.associations": {
+        "server_logger.h": "c",
+        "server_constants.h": "c",
+        "stdlib.h": "c",
+        "server_router.h": "c"
+    }
+}
