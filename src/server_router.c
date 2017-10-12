@@ -25,10 +25,10 @@ void route(enum method method, char *path, struct response *response) {
     register_handler(request, response);
 }
 
-struct response *make_response(enum response_type type, char *data) {
+struct response *make_response(enum response_type resp_type, char *data) {
     struct response *resp;
     resp = malloc(sizeof(struct response));
-    resp->type = type;
+    resp->type = resp_type;
     resp->data = data;
     return resp;
 }

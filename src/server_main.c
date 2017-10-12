@@ -6,10 +6,10 @@
 
 int main(int argc, char *argv[]) {
 
-    // default serving directory is ./web
-    loglevel(DEBUG);
+    // default serving directory is ./content
+    loglevel(INFO);
     
-    serve("./web");
+    serve("./content");
     route(GET, "/hello", text("Hello World!"));
     route(GET, "/world", text("World!"));
 

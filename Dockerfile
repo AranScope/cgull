@@ -1,7 +1,11 @@
-FROM ubuntu:trusty
+FROM gcc:4.9
 EXPOSE 9001
-RUN apt-get update
+
 WORKDIR /var/www
-COPY src/ /var/www
-RUN ["make"]
-ENTRYPOINT ["/var/www/server"]
+RUN mkdir build
+COPY src/ .
+RUN make
+COPY content build/content
+
+WORKDIR /var/www/build
+CMD ["./server"]

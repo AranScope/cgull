@@ -37,7 +37,7 @@ struct request *parse(char *http_header) {
 
     debug("The path: %s was requested", request->path);
 
-    char *basename = strtok_r(strdup(path), ".", &ext_ptr);
+    strtok_r(strdup(path), ".", &ext_ptr); // Remove the basename
 
     debug("Calculated the base name");
     char *ext = strtok_r(NULL, ".", &ext_ptr);
