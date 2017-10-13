@@ -5,6 +5,7 @@
         "server_constants.h": "c",
         "stdlib.h": "c",
         "server_router.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "server_base.h": "c"
     }
 }

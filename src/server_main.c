@@ -8,15 +8,16 @@
 
 int main(int argc, char *argv[]) {
 
-    // default serving directory is ./content
     loglevel(INFO);
-    
+
+    // default serving directory is ./content but specify it anyway
     serve("./content");
-    debug("Attempted to root in .contnet");
+    
+    // some custom routing, inspired by nodejs
     route(GET, "/hello", text("Hello World!"));
     route(GET, "/world", text("World!"));
 
-    // port specified
+    // grab the port from the command line
     if(argc == 2) {
         int port = atoi(argv[1]);
         start(port);

@@ -5,5 +5,6 @@
 
 void register_handler(struct request *request, struct response *response);
 struct response *handle(struct request *request);
+void free_handlers();
 
 #endif

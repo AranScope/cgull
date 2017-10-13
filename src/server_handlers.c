@@ -26,6 +26,19 @@ void init_handlers(struct handler *first_handler) {
     handler_not_found_response->status_message = "Not Found";
 }
 
+void free_handlers() {
+    struct node *current_node = handler_list;
+    
+    while(current_node->next != NULL) {
+        struct node *next_node = current_node->next;
+        free(current_node->handler->request);
+        free(current_node->handler->response);
+        free(current_node->handler);
+        free(current_node);
+        current_node = next_node;
+    }
+}
+
 void append_handler(struct handler *handler) {
     if(handler_list == NULL) {
         init_handlers(handler);
@@ -80,7 +93,7 @@ struct response *handle(struct request *request) {
         while(head != NULL) {
             struct request *req_node = head->handler->request;
 
-            if(req_node->method == request->method && strncmp(req_node->path, request->path, sizeof(request->path)) == 0) {
+            if(req_node->method == request->method && strcmp(req_node->path, request->path) == 0) {
                 return head->handler->response;
             }
 

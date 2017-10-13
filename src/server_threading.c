@@ -16,6 +16,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+static void *client_thread(void *data);
 
 void handle_connection(int client_socket) {
     // create a new pthread
@@ -33,7 +34,6 @@ void handle_connection(int client_socket) {
         exit(-1);
     }
 }
-
 
 static void *client_thread(void *data) {
     struct thread_block *t_block = (struct thread_block*) data;

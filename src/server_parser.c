@@ -21,12 +21,12 @@ struct request *parse(char *http_header) {
 
     debug("Parsing, found http verb %s", http_verb);
 
-    if(strncmp(http_verb, GET_STR, sizeof(http_verb)) == 0) {
+    if(strcmp(http_verb, GET_STR) == 0) {
         debug("Assigned get method to request");
         debug("Http verb value %d", GET);
         request->method = GET;
     }
-    else if(strncmp(http_verb, HEAD_STR, sizeof(http_verb)) == 0) {
+    else if(strcmp(http_verb, HEAD_STR) == 0) {
         debug("Assigned head method to request");
         request->method = HEAD;
     }
@@ -37,7 +37,9 @@ struct request *parse(char *http_header) {
 
     debug("The path: %s was requested", request->path);
 
-    strtok_r(strdup(path), ".", &ext_ptr); // Remove the basename
+    char *dup_path = strdup(path);
+
+    strtok_r(dup_path, ".", &ext_ptr); // Remove the basename
 
     debug("Calculated the base name");
     char *ext = strtok_r(NULL, ".", &ext_ptr);
@@ -47,6 +49,7 @@ struct request *parse(char *http_header) {
     
     debug("The extension is: %s", ext);
 
+    free(dup_path);
     return request;
 
     // char *key;
