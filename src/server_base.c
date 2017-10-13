@@ -3,14 +3,12 @@
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
-#include <sys/types.h>
 
 #include <memory.h>
 #include <string.h>
-
-#include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+
+
 
 #include "server_base.h"
 #include "server_defines.h"
@@ -20,6 +18,7 @@
 #include "server_parser.h"
 #include "server_logger.h"
 #include "server_signals.h"
+#include "server_threading.h"
 
 int start(int port) {
 
@@ -45,8 +44,8 @@ int start(int port) {
 
 void connection_listener(int server_socket) {
     
-    char buffer[MAX_BUFFER_SIZE];
-
+    /* This would usually be a bad idea, but server_signals.c handles
+       all of our signals so we can still exit cleanly */
     while(1) {
         struct sockaddr_in6 client_address;
         socklen_t client_address_size = sizeof(client_address);
@@ -55,29 +54,9 @@ void connection_listener(int server_socket) {
         if(client < 0) {
             perror("accept");
         }
-
-        debug("Reading buffer from client");
-        read(client, buffer, MAX_BUFFER_SIZE - 1);
-
-        debug("Parsing HTTP request from client");
-        struct request *request = parse(buffer);
-
-        info("Client requested resource: %s", request->path);
-
-        debug("Handling HTTP request from client");
-        struct response *resp = handle(request);
-
-        debug("The body from the handler is: %s", resp->data);        
-        
-        char buffer[MAX_BUFFER_SIZE];
-        char header[] = "HTTP/1.x %d %s\r\n"
-                        "Content-Type: text/html\r\n\r\n%s";
-
-        size_t response_size = snprintf(buffer, sizeof(buffer), header, resp->status, resp->status_message, resp->data);
-        
-        debug("Sending http response to client, content: \n------\n%s\n------\n", buffer);  
-
-        write(client, buffer, response_size);      
-        close(client);
+        else {
+            // multithreaded call
+            handle_connection(client);
+        }
     }
 }

@@ -4,6 +4,7 @@
         "server_logger.h": "c",
         "server_constants.h": "c",
         "stdlib.h": "c",
-        "server_router.h": "c"
+        "server_router.h": "c",
+        "string.h": "c"
     }
 }

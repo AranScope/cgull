@@ -47,4 +47,8 @@ struct node {
     struct node *next;
 };
 
+struct thread_block {
+    int client_socket;
+};
+
 #endif

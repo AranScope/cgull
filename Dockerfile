@@ -3,9 +3,10 @@ EXPOSE 9001
 
 WORKDIR /var/www
 RUN mkdir build
-COPY src/ .
+COPY src/ ./src
+COPY Makefile .
 RUN make
-COPY content build/content
+COPY content ./content
 
-WORKDIR /var/www/build
+WORKDIR /var/www
 CMD ["./server"]
