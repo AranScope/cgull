@@ -3,8 +3,8 @@ cgull is a multithreaded sever that has a subset of features from http 1.x.
 
 ## Features
 - Containerisation using Docker
-- Custom request routing inspired by node e.g.
-```
+- Custom request routing inspired by node (found in `server_main.c`) e.g.
+```Java
 serve("./content");
 route(GET, "/hello", text("Hello World!"));
 route(GET, "/world", text("World!"));
@@ -17,7 +17,7 @@ route(GET, "/world", text("World!"));
 ## Run
 The Makefile in `src/Makefile` has several main commands
 
-```
+```Bash
 # Compile the server into a binary in src/build
 make
 
@@ -39,7 +39,7 @@ make docker-kill
 
 The C binary accepts one argument -- A port specified as the first command line argument
 
-```
+```Bash
 # Defaults to port 9001 (this is used by docker also)
 ./server 
 
