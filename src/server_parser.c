@@ -35,9 +35,15 @@ struct request *parse(char *http_header) {
     
     request->path = path;
 
+    char null_uri[] = "/";
+    if(strncmp(request->path, null_uri, sizeof(null_uri)) == 0) {
+        debug("Internally rewriting null uri to /index.html");
+        request->path = "/index.html";
+    }
+
     debug("The path: %s was requested", request->path);
 
-    char *dup_path = strdup(path);
+    char *dup_path = strdup(request->path);
 
     strtok_r(dup_path, ".", &ext_ptr); // Remove the basename
 
