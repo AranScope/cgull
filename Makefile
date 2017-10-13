@@ -1,5 +1,5 @@
 GCC=$(shell which gcc)
-CFLAGS=-Wall  -std=gnu99
+CFLAGS=-Wall -Werror -std=gnu99
 # -Werror
 
 ifeq ($(GCC), /usr/bin/gcc)
@@ -8,11 +8,11 @@ else
 	CC=cc
 endif
 
-objs=server_main.c server_base.c server_sockets.c server_router.c server_handlers.c server_parser.c server_logger.c server_static.c server_signals.c
+objs=src/server_main.c src/server_base.c src/server_sockets.c src/server_router.c src/server_handlers.c src/server_parser.c src/server_logger.c src/server_static.c src/server_signals.c
 
 # Compile the C
 server: 
-	${CC} ${objs} -o build/server
+	${CC} ${objs} -o server
 
 # Kill all running docker containers
 docker-kill:
@@ -20,7 +20,7 @@ docker-kill:
 
 # Build the docker image
 docker:
-	docker build ../ -t cgull
+	docker build . -t cgull
 
 # Run the docker container interactively
 docker-run-interactive:
@@ -32,4 +32,4 @@ docker-run:
 
 # Delete the generated binary
 clean: 
-	rm -f build/server
+	rm -f server

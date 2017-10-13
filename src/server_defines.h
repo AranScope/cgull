@@ -11,11 +11,11 @@ enum method {
     HEAD
 };
 
-enum log_level {
+typedef enum {
     INFO,
     DEBUG,
     ERROR
-};
+} log_level;
 
 enum response_type {
     JSON,
@@ -25,6 +25,8 @@ enum response_type {
 
 struct response {
     enum response_type type;
+    int status;
+    char *status_message;
     char *data;
 };
 

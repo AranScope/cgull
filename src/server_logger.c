@@ -4,9 +4,9 @@
 #include "server_constants.h"
 #include <stdarg.h>
 
-enum log_level current_log_level = INFO;
+log_level current_log_level = INFO;
 
-void loglevel(enum log_level level) {
+void loglevel(log_level level) {
     current_log_level = level;
 }
 

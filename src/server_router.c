@@ -30,6 +30,8 @@ struct response *make_response(enum response_type resp_type, char *data) {
     resp = malloc(sizeof(struct response));
     resp->type = resp_type;
     resp->data = data;
+    resp->status = 200;
+    resp->status_message = "OK";
     return resp;
 }
 

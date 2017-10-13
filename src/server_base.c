@@ -56,29 +56,28 @@ void connection_listener(int server_socket) {
             perror("accept");
         }
 
-        info("New request received");
-
         debug("Reading buffer from client");
         read(client, buffer, MAX_BUFFER_SIZE - 1);
 
         debug("Parsing HTTP request from client");
         struct request *request = parse(buffer);
 
-        debug("Handling HTTP request from client");
-        char *body = handle(request);
-
         info("Client requested resource: %s", request->path);
-        debug("The body from the handler is: %s", body);        
-        
-        char response[MAX_BUFFER_SIZE];
-        char header[] = "HTTP/1.x 200 OK\r\n"
-                        "Content-Type: text/html\r\n\r\n";
 
-        size_t response_size = snprintf(response, sizeof(response), "%s%s", header, body);
-        
-        debug("Sending http response to client, content: \n------\n%s\n------\n", response);  
+        debug("Handling HTTP request from client");
+        struct response *resp = handle(request);
 
-        write(client, response, response_size);      
+        debug("The body from the handler is: %s", resp->data);        
+        
+        char buffer[MAX_BUFFER_SIZE];
+        char header[] = "HTTP/1.x %d %s\r\n"
+                        "Content-Type: text/html\r\n\r\n%s";
+
+        size_t response_size = snprintf(buffer, sizeof(buffer), header, resp->status, resp->status_message, resp->data);
+        
+        debug("Sending http response to client, content: \n------\n%s\n------\n", buffer);  
+
+        write(client, buffer, response_size);      
         close(client);
     }
 }

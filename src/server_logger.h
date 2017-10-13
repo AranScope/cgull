@@ -1,7 +1,8 @@
 #ifndef SERVER_LOGGER_H
 #define SERVER_LOGGER_H
 
-void loglevel(enum log_level level);
+#include "server_defines.h"
+void loglevel(log_level level);
 
 void info(const char *fmt, ...);
 void debug(const char *fmt, ...);

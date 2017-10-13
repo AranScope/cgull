@@ -22,7 +22,7 @@ char *read_file(char *file_url) {
     FILE *fp = fopen(file_path, "rb");
 
     if(!fp) {
-        perror("file");
+        info("No such resource found at: %s", file_path);
         return NULL;
     }
 

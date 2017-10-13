@@ -5,6 +5,8 @@ void serve(char *dir);
 
 void route(enum method m, char *path, struct response *resp);
 
+struct response *make_response(enum response_type resp_type, char *data);
+
 struct response *json(char *data);
 
 struct response *text(char *data);
