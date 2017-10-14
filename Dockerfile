@@ -8,16 +8,10 @@ EXPOSE 9001
 WORKDIR /var/www
 
 # Copy over all of the C files
-COPY src/ ./src
-
-# Copy over the Makefile
-COPY Makefile .
+COPY src/ .
 
 # Build the project
 RUN make
-
-# Copy over the web server content file
-COPY content ./content
 
 # Run the server
 CMD ["./server"]

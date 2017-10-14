@@ -18,7 +18,10 @@ route(GET, "/world", text("World!"));
 The Makefile in `src/Makefile` has several main commands
 
 ```Bash
-# Compile the server into a binary in src/build
+# Get in the right directory
+cd src/
+
+# Compile the server into a binary in src
 make
 
 # Delete any previously generated binaries, required for regenerating new binary
