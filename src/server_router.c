@@ -5,6 +5,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*
     The serve directive.
@@ -37,7 +38,9 @@ void route(enum method method, char *path, struct response *response) {
 
     request->method = method;
     request->path = path;
-    request->type = response->type;
+    request->content_type = response->content_type;
+
+    debug("Created handler for path: %s with content type: %s", path, request->content_type);
 
     register_handler(request, response);
 }
@@ -48,13 +51,21 @@ void route(enum method method, char *path, struct response *response) {
     TODO: This should actually use the response type properly
     i.e. to add TEXT/HTML to the response header.
 */
-struct response *make_response(enum response_type resp_type, char *data) {
+struct response *make_response(char *content_type, char *data) {
+    return make_binary_response(content_type, data, strlen(data));
+}
+
+/*
+    Helper function to create a quick HTTP response with defined size for binary data issues. 
+*/
+struct response *make_binary_response(char *content_type, char *data, int data_length) {
     struct response *resp;
     resp = malloc(sizeof(struct response));
-    resp->type = resp_type;
+    resp->content_type = content_type;
     resp->data = data;
     resp->status = 200;
     resp->status_message = "OK";
+    resp->length = data_length;
     return resp;
 }
 
@@ -64,8 +75,7 @@ struct response *make_response(enum response_type resp_type, char *data) {
     TODO: This doesn't actually change the response type.
 */
 struct response *json(char *data) {
-    enum response_type type = JSON;
-    return make_response(type, data);
+    return make_response("text/json", data);
 }
 
 /*
@@ -74,8 +84,7 @@ struct response *json(char *data) {
     TODO: This doesn't actually change the response type.
 */
 struct response *text(char *data) {
-    enum response_type type = TEXT;
-    return make_response(TEXT, data);
+    return make_response("text/plain", data);
 }
 
 /*
@@ -84,6 +93,5 @@ struct response *text(char *data) {
     TODO: This doesn't actually change the response type.
 */
 struct response *html(char *data) {
-    enum response_type type = TEXTHTML;
-    return make_response(TEXTHTML, data);
+    return make_response("text/html", data);
 }

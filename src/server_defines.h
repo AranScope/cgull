@@ -19,25 +19,18 @@ typedef enum {
     ERROR
 } log_level;
 
-// HTTP response type
-enum response_type {
-    JSON,
-    TEXT,
-    TEXTHTML
-};
-
 // HTTP response struct
 struct response {
-    enum response_type type;
     int status;
     char *status_message;
     char *data;
+    char *content_type;
+    int length;
 };
 
 // HTTP request struct
 struct request {
     enum method method;
-    enum response_type type;
     char *path;
     bool file_request;
     char *content_type;

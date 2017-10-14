@@ -34,6 +34,7 @@ struct request *parse(char *http_header) {
 
     struct request *request;
     request = malloc(sizeof(struct request));
+    request->content_type = "text/html"; // sensible default
 
     char *line_ptr;
     char *token_ptr;

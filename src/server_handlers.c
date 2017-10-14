@@ -30,11 +30,11 @@ void init_handlers(struct handler *first_handler) {
     handler_list->next = NULL;
     handler_list->handler = first_handler;
 
-    file_not_exist_response = make_response(TEXT, "The requested file does not exist");
+    file_not_exist_response = make_response("text/html", "The requested file does not exist");
     file_not_exist_response->status = 404;
     file_not_exist_response->status_message = "Not Found";
 
-    handler_not_found_response = make_response(TEXT, "The requested handler could not be found");
+    handler_not_found_response = make_response("text/html", "The requested handler could not be found");
     handler_not_found_response->status = 404;
     handler_not_found_response->status_message = "Not Found";
 }
@@ -102,16 +102,20 @@ struct response *handle(struct request *request) {
     if(request->file_request) {
         debug("Calling file reader to read file at path: %s", request->path);
 
+        char buffer[MAX_BUFFER_SIZE];
+
         // read the file into a buffer
-        char *buffer = read_file(request->path);
+        int buffer_length = read_file(request->path, buffer);
+
+        debug("Read file, content: %s", buffer);
         
         // if the buffer is null then the file was not found so throw a 404
-        if(!buffer) {
+        if(buffer_length < 0) {
             return file_not_exist_response;
         }
 
         // otherwise make a new response with the file text.
-        return make_response(TEXT, buffer);
+        return make_binary_response(request->content_type, buffer, buffer_length);
     }
     
    

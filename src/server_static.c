@@ -10,8 +10,9 @@
 
 /*
     Read a file into a character buffer, pretty simple.
+    Returns the length of the buffer
 */
-char *read_file(char *file_url) {
+int read_file(char *file_url, char *buffer) {
 
     // the web root is always . because we've used chdir previously
     char web_root[] = ".";
@@ -22,21 +23,21 @@ char *read_file(char *file_url) {
     strncat(file_path, file_url, sizeof(file_path)); // TODO: Make sure we're using buffer sizes properly.
 
     debug("Reading file at path: %s", file_path);
-    
-    char *buffer = malloc(sizeof(char) * MAX_BUFFER_SIZE);
  
     // read in binary, gives us the opportunity to add support for binary files like pngs.
     FILE *fp = fopen(file_path, "rb");
 
     if(!fp) {
         info("No such resource found at: %s", file_path);
-        return NULL;
+        return -1;
     }
 
     // find out the length of the file
     fseek(fp, 0, SEEK_END);
     long fsize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
+
+    debug("File length is: %ld", fsize);
 
     // read the whole thing into memory
     fread(buffer, fsize, 1, fp);
@@ -45,5 +46,5 @@ char *read_file(char *file_url) {
     // null terminate the buffer
     buffer[fsize] = '\0';
 
-    return buffer;
+    return fsize;
 }

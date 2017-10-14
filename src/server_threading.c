@@ -78,29 +78,35 @@ static void *client_thread(void *data) {
     char send_buffer[MAX_BUFFER_SIZE];
     char header[] = "HTTP/1.x %d %s\r\n"
                     "Content-Type: %s\r\n" // TODO: Get the bloody content type right
+                    "Content-Length: %d\r\n"
                     "\r\n";
 
-    size_t response_size;
+    size_t header_size;
     
     // if it's a get request send the data
     if(request->method == GET) {
-        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type);
+        header_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, resp->content_type, resp->length);
     }
     // otherwise just send the content length
     else if(request->method == HEAD) {
-        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type);
+        header_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, resp->content_type, resp->length);
     }
 
     // write the response to the client thread
-    debug("Sending http response to client, content: \n------\n%s\n------\n", send_buffer);  
-    write(client, send_buffer, response_size);
-    write(client, resp->data, MAX_BUFFER_SIZE);
+    debug("Sending http header to client, content: \n------\n%s\n------\n", send_buffer);  
+    write(client, send_buffer, header_size);
+
+    // TODO: images aren't working because strlen doesn't work on binary types, this is because they may
+    // contain null terminators that are not null characters, need to work this one out.
+    debug("Sending http data to client, content: \n------\n%s\n------\n", resp->data);  
+    write(client, resp->data, resp->length);
     
     // clean everything up
     close(client);
     free(request);
-    free(resp->data);
-    free(resp);
+    // free(resp->data);
+    // free(resp); // need to be careful here because request handlers shouldn't
+    // be freed but file ones should :/
 
     pthread_exit(0);
 }

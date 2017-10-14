@@ -14,8 +14,9 @@ int main(int argc, char *argv[]) {
     serve("./content");
     
     // some custom routing, inspired by nodejs
-    route(GET, "/hello", text("Hello World!"));
+    route(GET, "/hello", html("<h1>Hello World!</h1>"));
     route(GET, "/world", text("World!"));
+    route(GET, "/json", json("{\"key\":\"value\"}"));
 
     // grab the port from the command line, set it as the new port
     if(argc == 2) {
