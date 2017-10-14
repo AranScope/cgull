@@ -4,6 +4,25 @@
 #include "server_defines.h"
 #include "server_logger.h"
 
+// struct for mapping between extension and content-type
+// inspired by -> https://github.com/labcoder/simple-webserver/blob/master/server.c
+struct {
+    char *extension;
+    char *content_type;
+} extensions[] = {
+    {"html", "text/html"},
+    {"html", "text/html"},
+    {"js", "text/js"},
+    {"css", "text/css"},
+    {"png", "image/png"},
+    {"jpg", "image/jpeg"},
+    {"jpeg", "image/jpeg"},
+    {"txt", "text/plain"},
+    {"md", "text/plain"},
+    {"pdf", "application/pdf"},
+    {0, 0}
+};
+
 /*
     Parse a HTTP request header string and
     return a HTTP request struct.
@@ -66,8 +85,22 @@ struct request *parse(char *http_header) {
     // grab the extension (if one exists)
     char *ext = strtok_r(NULL, ".", &ext_ptr);
 
-    if(ext) request->file_request = true;
-    else request->file_request = false;
+    if(ext) {
+        request->file_request = true;
+
+        for(int i = 0; extensions[i].extension != 0; i++) {
+            int len = strlen(extensions[i].extension);
+
+            if(strncmp(ext, extensions[i].extension, len) == 0) {
+                request->content_type = extensions[i].content_type;
+                break;
+            }
+        }
+
+    }
+    else {
+        request->file_request = false;
+    }
     
     debug("The extension is: %s", ext);
 

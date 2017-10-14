@@ -11,6 +11,6 @@
      TODO: arbitrary length inputs
 */
 
-#define MAX_BUFFER_SIZE 4096
+#define MAX_BUFFER_SIZE 500000
 
 #endif

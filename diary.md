@@ -32,5 +32,5 @@ The following diary documents the processes I went through to develop cgull and 
 
 ## Still need to do
 - Make sure everything is fully thread safe and memory safe, the baptism of fire of learning this stuff from scratch means there still could be issues.
-- Get the bloody content types right (HAVE TO DO THIS BEFORE SUBMISSION)
+- Get binary file types working (in progress)
 - Start working on `rewrite("/", "/index.html");` directive

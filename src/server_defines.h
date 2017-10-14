@@ -40,6 +40,7 @@ struct request {
     enum response_type type;
     char *path;
     bool file_request;
+    char *content_type;
 };
 
 // HTTP request handler struct

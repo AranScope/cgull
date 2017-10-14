@@ -77,7 +77,7 @@ static void *client_thread(void *data) {
     // set up the response TODO: correct content type
     char send_buffer[MAX_BUFFER_SIZE];
     char header[] = "HTTP/1.x %d %s\r\n"
-                    "Content-Type: text/html\r\n" // TODO: Get the bloody content type right
+                    "Content-Type: %s\r\n" // TODO: Get the bloody content type right
                     "Content-Length: %d\r\n"
                     "\r\n%s";
 
@@ -85,11 +85,11 @@ static void *client_thread(void *data) {
     
     // if it's a get request send the data
     if(request->method == GET) {
-        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, strlen(resp->data), resp->data);
+        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type, strlen(resp->data), resp->data);
     }
     // otherwise just send the content length
     else if(request->method == HEAD) {
-        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, strlen(resp->data), "");
+        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type, strlen(resp->data), "");
     }
 
 

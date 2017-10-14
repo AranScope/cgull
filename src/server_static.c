@@ -36,14 +36,24 @@ char *read_file(char *file_url) {
     // find out the length of the file
     fseek(fp, 0, SEEK_END);
     long fsize = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    rewind(fp);
 
+    debug("File length is: %d bytes", fsize);
+
+    if(fsize > MAX_BUFFER_SIZE) {
+        debug("File is larger than maximum buffer size");
+        fclose(fp);
+        return NULL;
+    }
+    
     // read the whole thing into memory
     fread(buffer, fsize, 1, fp);
     fclose(fp);
     
     // null terminate the buffer
     buffer[fsize] = '\0';
+
+    debug("File buffer length is: %ld bytes", strlen(buffer));
 
     return buffer;
 }
