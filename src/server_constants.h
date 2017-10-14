@@ -7,6 +7,8 @@
 
      We need to be careful here, as if we add support for binary types such as images
      we should probably look into malloc or dramatically increasing this buffer size.
+
+     TODO: arbitrary length inputs
 */
 
 #define MAX_BUFFER_SIZE 4096

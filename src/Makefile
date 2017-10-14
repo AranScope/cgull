@@ -14,6 +14,10 @@ objs=server_main.c server_base.c server_sockets.c server_router.c server_handler
 server: 
 	${CC} ${objs} ${CFLAGS} -o server
 
+# All target
+all: 
+	${CC} ${objs} ${CFLAGS} -o server
+
 # Kill all running docker containers
 docker-kill:
 	docker kill $(docker ps -q)
