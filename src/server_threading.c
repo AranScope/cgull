@@ -103,10 +103,14 @@ static void *client_thread(void *data) {
     
     // clean everything up
     close(client);
+
+    // only free the response if this is a file request,
+    // because we don't want to delete responses for our handlers.
+    if(request->file_request) {
+        free(resp);
+    }
+
     free(request);
-    // free(resp->data);
-    // free(resp); // need to be careful here because request handlers shouldn't
-    // be freed but file ones should :/
 
     pthread_exit(0);
 }
