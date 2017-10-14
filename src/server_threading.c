@@ -56,10 +56,20 @@ static void *client_thread(void *data) {
     
     char send_buffer[MAX_BUFFER_SIZE];
     char header[] = "HTTP/1.x %d %s\r\n"
-                    "Content-Type: text/html\r\n\r\n%s";
+                    "Content-Type: text/html\r\n"
+                    "Content-Length: %d\r\n"
+                    "\r\n%s";
 
-    size_t response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, resp->data);
+    size_t response_size;
     
+    if(request->method == GET) {
+        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, strlen(resp->data), resp->data);
+    }
+    else if(request->method == HEAD) {
+        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, strlen(resp->data), "");
+    }
+
+
     debug("Sending http response to client, content: \n------\n%s\n------\n", send_buffer);  
 
     write(client, send_buffer, response_size);      
