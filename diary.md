@@ -1,5 +1,6 @@
+# Diary
 
-
+## Intro
 When I started this assignment I had very little experience in C, having only completed Hayo's C/C++ course last year with a focus on abstract data structures.
 
 The following diary documents the processes I went through to develop cgull and the successes and failures I experienced along the way.
@@ -29,6 +30,8 @@ The following diary documents the processes I went through to develop cgull and 
 - Added HEAD request support
 - Went back and did a lot of code clean up and hopefully fixed most memory errors
 - Wrote a lot of comments, this basically took forever but I identified some things that needed to be fixed
+- Finally got content types in, this was as simple as an in place struct array with extensions and content types
+- Currently struggling with binary data such as pngs
 
 ## Still need to do
 - Make sure everything is fully thread safe and memory safe, the baptism of fire of learning this stuff from scratch means there still could be issues.
