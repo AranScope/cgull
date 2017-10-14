@@ -78,28 +78,28 @@ static void *client_thread(void *data) {
     char send_buffer[MAX_BUFFER_SIZE];
     char header[] = "HTTP/1.x %d %s\r\n"
                     "Content-Type: %s\r\n" // TODO: Get the bloody content type right
-                    "Content-Length: %d\r\n"
-                    "\r\n%s";
+                    "\r\n";
 
     size_t response_size;
     
     // if it's a get request send the data
     if(request->method == GET) {
-        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type, strlen(resp->data), resp->data);
+        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type);
     }
     // otherwise just send the content length
     else if(request->method == HEAD) {
-        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type, strlen(resp->data), "");
+        response_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, request->content_type);
     }
-
 
     // write the response to the client thread
     debug("Sending http response to client, content: \n------\n%s\n------\n", send_buffer);  
     write(client, send_buffer, response_size);
+    write(client, resp->data, MAX_BUFFER_SIZE);
     
     // clean everything up
     close(client);
     free(request);
+    free(resp->data);
     free(resp);
 
     pthread_exit(0);

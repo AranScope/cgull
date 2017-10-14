@@ -37,3 +37,13 @@ The following diary documents the processes I went through to develop cgull and 
 - Make sure everything is fully thread safe and memory safe, the baptism of fire of learning this stuff from scratch means there still could be issues.
 - Get binary file types working (in progress)
 - Start working on `rewrite("/", "/index.html");` directive
+
+Pass a function pointer to the readfile function, that function will take partial sections of the file and write them out to the socket
+
+int write_file_data(char *data) {
+    write(socket, data) whatever.
+}
+
+void read_file(handler (*void)(char *data)) {
+    handler(partial);
+}
