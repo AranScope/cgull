@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     route(GET, "/hello", text("Hello World!"));
     route(GET, "/world", text("World!"));
 
-    // grab the port from the command line
+    // grab the port from the command line, set it as the new port
     if(argc == 2) {
         int port = atoi(argv[1]);
         start(port);

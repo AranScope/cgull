@@ -4,8 +4,13 @@
 #include "server_defines.h"
 #include "server_logger.h"
 
-// returns a response type, path given a request
-// 
+/*
+    Parse a HTTP request header string and
+    return a HTTP request struct.
+
+    This extracts the request path, http verb and should also
+    extract all of the key: value pairs.
+*/
 struct request *parse(char *http_header) {
 
     struct request *request;
@@ -15,26 +20,34 @@ struct request *parse(char *http_header) {
     char *token_ptr;
     char *ext_ptr;
 
+    // grab the first line, this has most of the information we need
     char *first_line = strtok_r(http_header, "\n", &line_ptr);
 
+    // extract the http verb i.e. GET / HEAD etc.
     char *http_verb = strtok_r(first_line, " ", &token_ptr);
 
     debug("Parsing, found http verb %s", http_verb);
 
     if(strcmp(http_verb, GET_STR) == 0) {
+        // this is a get request
         debug("Assigned get method to request");
         debug("Http verb value %d", GET);
         request->method = GET;
     }
     else if(strcmp(http_verb, HEAD_STR) == 0) {
+        // this is a head request
         debug("Assigned head method to request");
         request->method = HEAD;
     }
     
+    // extract the requested path
     char *path = strtok_r(NULL, " ", &token_ptr);
     
+    // assign it to the request struct
     request->path = path;
 
+    // perform null url -> index.html rewriting, this should later be broken
+    // out into a rewrite(from, to) directive.
     char null_uri[] = "/";
     if(strncmp(request->path, null_uri, sizeof(null_uri)) == 0) {
         debug("Internally rewriting null uri to /index.html");
@@ -43,11 +56,14 @@ struct request *parse(char *http_header) {
 
     debug("The path: %s was requested", request->path);
 
+    // copy the request path as strtok_r does in place modifications
     char *dup_path = strdup(request->path);
 
-    strtok_r(dup_path, ".", &ext_ptr); // Remove the basename
-
+    // remove the basename from the path as we're only checking if this is a file
+    strtok_r(dup_path, ".", &ext_ptr);
     debug("Calculated the base name");
+
+    // grab the extension (if one exists)
     char *ext = strtok_r(NULL, ".", &ext_ptr);
 
     if(ext) request->file_request = true;
@@ -55,7 +71,9 @@ struct request *parse(char *http_header) {
     
     debug("The extension is: %s", ext);
 
+    // clean up the memory
     free(dup_path);
+
     return request;
 
     // char *key;
@@ -67,5 +85,4 @@ struct request *parse(char *http_header) {
         
         
     // }
-
 }

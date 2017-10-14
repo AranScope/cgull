@@ -10,6 +10,15 @@ void loglevel(log_level level) {
     current_log_level = level;
 }
 
+/*
+    Print to stdout at the 'info' level.
+
+    This takes exactly the same arguments as printf.
+
+    This should be used for generally informative but non-technical messages, so
+    a non-technical user could understand the output and know roughly what state
+    the program is in.
+*/
 void info(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -21,6 +30,13 @@ void info(const char *fmt, ...) {
     printf("INFO: %s\n", buffer);
 }
 
+/*
+    Print to stdout at the 'debug' level.
+
+    This takes exactly the same arguments as printf.
+
+    This should be used for technical debugging information, excluding errors.
+*/
 void debug(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -34,6 +50,13 @@ void debug(const char *fmt, ...) {
     }
 }
 
+/*
+    Print to stdout at the 'error' level.
+
+    This takes exactly the same arguments as printf.
+
+    This should be used for printing technical errors.
+*/
 void error(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
