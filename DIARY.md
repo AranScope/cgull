@@ -4,6 +4,7 @@ When I started this assignment I had very little experience in C, having only co
 
 The following diary documents the processes I went through to develop cgull and the successes and failures I experienced along the way.
 
+## Done
 - Learnt about safe string parsing from strok_r to strncmp, strncat, strdup etc.
 - Learnt about using multiple files in C, header includes, guards, general best practices
 - Wrote a lot of core data structure definitions, requests, responses etc.
@@ -25,6 +26,11 @@ The following diary documents the processes I went through to develop cgull and 
 - Used FROM directive in Docker to use a pre-made GCC image from docker hub, had code copying in and compiling
 - Finished the docker system to allow code to be copied in, compiled, run and accessed on the host system
 - Learnt how Makefiles work (very basic) and added docker commands to these (probably not best practice)
-- Started working on `rewrite("/", "/index.html");` directive
 - Added HEAD request support
 - Went back and did a lot of code clean up and hopefully fixed most memory errors
+- Wrote a lot of comments, this basically took forever but I identified some things that needed to be fixed
+
+## Still need to do
+- Make sure everything is fully thread safe and memory safe, the baptism of fire of learning this stuff from scratch means there still could be issues.
+- Get the bloody content types right (HAVE TO DO THIS BEFORE SUBMISSION)
+- Start working on `rewrite("/", "/index.html");` directive
