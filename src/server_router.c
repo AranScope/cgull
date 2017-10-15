@@ -51,19 +51,19 @@ void route(enum method method, char *path, struct response *response) {
     TODO: This should actually use the response type properly
     i.e. to add TEXT/HTML to the response header.
 */
-struct response *make_response(char *content_type, char *data) {
-    return make_binary_response(content_type, data, strlen(data));
+struct response *make_response(int status_code, char *content_type, char *data) {
+    return make_binary_response(status_code, content_type, data, strlen(data));
 }
 
 /*
     Helper function to create a quick HTTP response with defined size for binary data issues. 
 */
-struct response *make_binary_response(char *content_type, char *data, int data_length) {
+struct response *make_binary_response(int status_code, char *content_type, char *data, int data_length) {
     struct response *resp;
     resp = malloc(sizeof(struct response));
     resp->content_type = content_type;
     resp->data = data;
-    resp->status = 200;
+    resp->status = status_code;
     resp->status_message = "OK";
     resp->length = data_length;
     return resp;
@@ -75,7 +75,7 @@ struct response *make_binary_response(char *content_type, char *data, int data_l
     TODO: This doesn't actually change the response type.
 */
 struct response *json(char *data) {
-    return make_response("text/json", data);
+    return make_response(200, "text/json", data);
 }
 
 /*
@@ -84,7 +84,7 @@ struct response *json(char *data) {
     TODO: This doesn't actually change the response type.
 */
 struct response *text(char *data) {
-    return make_response("text/plain", data);
+    return make_response(200, "text/plain", data);
 }
 
 /*
@@ -93,5 +93,5 @@ struct response *text(char *data) {
     TODO: This doesn't actually change the response type.
 */
 struct response *html(char *data) {
-    return make_response("text/html", data);
+    return make_response(200, "text/html", data);
 }

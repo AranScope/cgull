@@ -31,12 +31,13 @@ The following diary documents the processes I went through to develop cgull and 
 - Went back and did a lot of code clean up and hopefully fixed most memory errors
 - Wrote a lot of comments, this basically took forever but I identified some things that needed to be fixed
 - Finally got content types in, this was as simple as an in place struct array with extensions and content types
-- Currently struggling with binary data such as pngs
+- Got binary file types working, had a long term error as a result of passing round a buffer that was not malloc'd, also struggling with the fact that HTTP doesn't define max sizes
+- Fixed crashing when requesting file that does not exist, this was a result of free being called on a non-malloc'd buffer, fixed this by mallocing the original buffer
 
 ## Still need to do
 - Make sure everything is fully thread safe and memory safe, the baptism of fire of learning this stuff from scratch means there still could be issues.
-- Get binary file types working (in progress)
 - Start working on `rewrite("/", "/index.html");` directive
+- Clean up errors system in handlers
 
 Pass a function pointer to the readfile function, that function will take partial sections of the file and write them out to the socket
 

@@ -1,6 +1,5 @@
 GCC=$(shell which gcc)
-CFLAGS=-Wall -std=gnu99 -pthread
-# -Werror
+CFLAGS=-Wall -Werror -std=gnu99 -pthread
 
 ifeq ($(GCC), /usr/bin/gcc)
 	CC=gcc

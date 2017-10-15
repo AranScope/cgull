@@ -9,9 +9,6 @@
 
 struct node *handler_list = NULL;
 
-struct response *file_not_exist_response = NULL;
-struct response *handler_not_found_response = NULL;
-
 /*
     Initialise the handler list.
 
@@ -29,14 +26,6 @@ void init_handlers(struct handler *first_handler) {
     handler_list = malloc(sizeof(struct node));
     handler_list->next = NULL;
     handler_list->handler = first_handler;
-
-    file_not_exist_response = make_response("text/html", "The requested file does not exist");
-    file_not_exist_response->status = 404;
-    file_not_exist_response->status_message = "Not Found";
-
-    handler_not_found_response = make_response("text/html", "The requested handler could not be found");
-    handler_not_found_response->status = 404;
-    handler_not_found_response->status_message = "Not Found";
 }
 
 /* 
@@ -103,19 +92,22 @@ struct response *handle(struct request *request) {
         debug("Calling file reader to read file at path: %s", request->path);
 
         char *buffer = malloc(sizeof(char) * MAX_FILE_SIZE);
+        memset(buffer, '\0', sizeof(char) * MAX_FILE_SIZE);
 
         // read the file into a buffer
         int buffer_length = read_file(request->path, buffer);
 
-        debug("Read file, content: %s", buffer);
-        
         // if the buffer is null then the file was not found so throw a 404
         if(buffer_length < 0) {
-            return file_not_exist_response;
+            char response_text[] = "The requested file does not exist";
+            strncpy(buffer, response_text, sizeof(response_text));
+            struct response *response = make_response(404, "text/html", buffer);
+            response->status_message = "Not Found";
+            return response;
         }
 
         // otherwise make a new response with the file text.
-        return make_binary_response(request->content_type, buffer, buffer_length);
+        return make_binary_response(200, request->content_type, buffer, buffer_length);
     }
     
    
@@ -123,7 +115,10 @@ struct response *handle(struct request *request) {
         // if there are no defined user handlers then return a 404 because we've run out of options
         if(handler_list == NULL) {
             error("Request for resource at path: %s does not have a handler", request->path);
-            return handler_not_found_response;
+
+            struct response *response = make_response(404, "text/html", "The requested handler does not exist");
+            response->status_message = "Not Found";
+            return response;
         }
 
         // otherwise loop throught the handlers till we find one with a matching HTTP verb and
@@ -142,6 +137,8 @@ struct response *handle(struct request *request) {
 
         // couldn't fine a handler, so again return a 404.
         error("Request for resource at path: %s does not have a handler", request->path);
-        return handler_not_found_response;
+        struct response *response = make_response(404, "text/html", "The requested handler does not exist");
+        response->status_message = "Not Found";
+        return response;
     }
 }
