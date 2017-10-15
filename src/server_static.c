@@ -17,7 +17,7 @@ int read_file(char *file_url, char *buffer) {
     // the web root is always . because we've used chdir previously
     char web_root[] = ".";
 
-    char file_path[MAX_BUFFER_SIZE] = {0};
+    char file_path[MAX_URI_SIZE] = {0};
 
     strncat(file_path, web_root, sizeof(web_root));
     strncat(file_path, file_url, sizeof(file_path)); // TODO: Make sure we're using buffer sizes properly.

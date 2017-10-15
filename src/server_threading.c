@@ -57,10 +57,10 @@ static void *client_thread(void *data) {
     int client = t_block->client_socket;
 
     // grab the request header from the client
-    char receive_buffer[MAX_BUFFER_SIZE];
+    char receive_buffer[MAX_HEADER_SIZE] = {0};
     
     debug("Reading buffer from client");
-    read(client, receive_buffer, MAX_BUFFER_SIZE - 1);
+    read(client, receive_buffer, MAX_HEADER_SIZE - 1);
 
     // parse the request
     debug("Parsing HTTP request from client");
@@ -72,10 +72,10 @@ static void *client_thread(void *data) {
     debug("Handling HTTP request from client");
     struct response *resp = handle(request);
 
-    debug("The body from the handler is: %s", resp->data);        
+    debug("The body from the handler is: %s", resp->data);     
     
     // set up the response TODO: correct content type
-    char send_buffer[MAX_BUFFER_SIZE];
+    char send_buffer[MAX_HEADER_SIZE] = {0};
     char header[] = "HTTP/1.x %d %s\r\n"
                     "Content-Type: %s\r\n" // TODO: Get the bloody content type right
                     "Content-Length: %d\r\n"
@@ -92,13 +92,19 @@ static void *client_thread(void *data) {
         header_size = snprintf(send_buffer, sizeof(send_buffer), header, resp->status, resp->status_message, resp->content_type, resp->length);
     }
 
+    header[header_size] = '\0';
     // write the response to the client thread
-    debug("Sending http header to client, content: \n------\n%s\n------\n", send_buffer);  
+    // debug("Size of HTTP header is: %d bytes", header_size);
+    // debug("Sending http header to client, content: \n------\n%s\n------\n", send_buffer);
+
     write(client, send_buffer, header_size);
 
     // TODO: images aren't working because strlen doesn't work on binary types, this is because they may
     // contain null terminators that are not null characters, need to work this one out.
-    debug("Sending http data to client, content: \n------\n%s\n------\n", resp->data);  
+    // Images and pdf's are working, now HTML and txt messages are cut short
+    // debug("Sending http data to client, content: \n------\n%s\n------\n", resp->data);
+    
+    // this points to unaddressable bytes apparently :(
     write(client, resp->data, resp->length);
     
     // clean everything up
@@ -107,10 +113,12 @@ static void *client_thread(void *data) {
     // only free the response if this is a file request,
     // because we don't want to delete responses for our handlers.
     if(request->file_request) {
-        free(resp);
+        free(resp->data); // malloc'd string
+        free(resp); 
     }
 
     free(request);
+    free(t_block);
 
     pthread_exit(0);
 }

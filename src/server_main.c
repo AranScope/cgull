@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
 
-    loglevel(DEBUG);
+    loglevel(INFO);
 
     // default serving directory is ./content but specify it anyway
     serve("./content");

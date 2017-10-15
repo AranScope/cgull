@@ -11,6 +11,9 @@
      TODO: arbitrary length inputs
 */
 
-#define MAX_BUFFER_SIZE 500000
+#define MAX_HEADER_SIZE 8192
+#define PRINT_BUFFER_SIZE 8192
+#define MAX_URI_SIZE 8192
+#define MAX_FILE_SIZE 1000000
 
 #endif

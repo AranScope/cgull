@@ -102,7 +102,7 @@ struct response *handle(struct request *request) {
     if(request->file_request) {
         debug("Calling file reader to read file at path: %s", request->path);
 
-        char buffer[MAX_BUFFER_SIZE];
+        char *buffer = malloc(sizeof(char) * MAX_FILE_SIZE);
 
         // read the file into a buffer
         int buffer_length = read_file(request->path, buffer);
